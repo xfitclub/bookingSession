@@ -1,0 +1,12 @@
+:root {
+    --background-color: #121212;
+    --text-color: #ffffff;
+    --input-bg: #1e1e1e;
+    --border-color: #333;
+  }
+  /* Apply globally */
+  body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
