@@ -41,48 +41,12 @@
     <div class="p-6">
         <form class="max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
             <!-- Heading -->
-            <h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">Select Date and Time</h1>
-            <p class="text-center mb-4 text-gray-700 dark:text-gray-300">Please select a date and time for your trial
-                booking session.</p>
-
-            <!-- Date Picker -->
-            <div class="relative mb-6">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                    </svg>
-                </div>
-                <input id="datepicker-actions" datepicker datepicker-format="dd-mm-yyyy" datepicker-buttons
-                    datepicker-autoselect-today type="text"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                    placeholder="Select date" required>
-            </div>
-
-            <!-- Time Picker -->
-            <div class="mb-6" onclick="document.getElementById('time').showPicker()">
-                <label for="time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
-                    time:</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd"
-                                d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <input type="time" id="time" required
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" />
-                </div>
-            </div>
+            <h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">Select GYM from following</h1>
 
             <!-- Gym Dropdown -->
             <div class="mb-6">
-                <label for="gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Plezi
-                    partnered
-                    gym:</label>
+                <label for="gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Chose gym
+                    a :</label>
                 <select id="gym"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                     required>
@@ -92,9 +56,6 @@
                     <option>GYM C</option>
                     <option>GYM D</option>
                 </select>
-                <div class="py-2">
-                    <a href="/gyms.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Gym no found ? search here and let us know </a>
-                  </div>
             </div>
 
             <!-- Email Input -->
