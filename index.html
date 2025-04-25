@@ -16,6 +16,8 @@
     <link href="https://cdn.jsdelivr.net/npm/flowbite@latest/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/flowbite@latest/dist/flowbite.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Include Alpine.js (for interactivity) -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link rel="stylesheet" href="index.css" />
 
 </head>
@@ -54,8 +56,8 @@
                             d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                     </svg>
                 </div>
-                <input id="datepicker-actions" datepicker datepicker-format="dd-mm-yyyy" datepicker-buttons
-                    datepicker-autoselect-today type="text"
+                <input id="datepicker-actions" datepicker datepicker-format="dd-mm-yyyy" datepicker-autoselect-today
+                    type="text"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                     placeholder="Select date" required>
             </div>
@@ -80,38 +82,55 @@
 
             <!-- Gym Dropdown -->
             <div class="mb-6">
-                <label for="gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Plezi
-                    partnered
-                    gym:</label>
+                <label for="gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Select Plezi partnered gym:
+                </label>
                 <select id="gym"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                     required>
                     <option disabled selected>Select a gym</option>
-                    <option>GYM A</option>
-                    <option>GYM B</option>
-                    <option>GYM C</option>
-                    <option>GYM D</option>
+                    <option>[PP] GYM A</option>
+                    <option>[PP] GYM B</option>
+                    <option>[PP] GYM C</option>
+                    <option>[PP] GYM D</option>
+                    <option value="other">other</option>
                 </select>
-                <div class="py-2">
-                    <a href="/gyms.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Gym no found ? search here and let us know </a>
-                  </div>
             </div>
 
-            <!-- Email Input -->
-            <div class="mb-5">
-                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
-                    email</label>
-                <input type="email" id="email" placeholder="name@example.com" required
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" />
+            <!-- Additional Search (hidden by default) -->
+            <div id="other-gym-container" class="mb-6 hidden">
+                <label for="other-gym-search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Search for other gym:
+                </label>
+                <input type="text" id="other-gym-search" placeholder="Start typing to search..."
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+
+                <!-- Filtered results -->
+                <ul id="gym-results"
+                    class="mt-2 max-h-40 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow hidden">
+                    <!-- Results will populate here -->
+                </ul>
             </div>
+            <!-- Manual entry textarea (initially hidden) -->
+            <div id="manual-gym-entry" class="mt-3 hidden">
+                <label for="manual-gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Can't find your gym? Enter it manually:
+                </label>
+                <textarea id="manual-gym" rows="2" placeholder="Enter gym name here... <GYM NAME , AREA , CITY , STATE>"
+                    required
+                    class="w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+            </div>
+
 
             <!-- Phone Input -->
-            <div class="mb-5">
+            <div class="mb-6">
                 <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
                     number</label>
                 <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" placeholder="9876543210" required
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" />
             </div>
+
+            <span><b>P.S.</b> We wont be spamming , we will notify you about your gym</span>
 
             <!-- Submit Button -->
             <button type="submit"
@@ -129,6 +148,64 @@
         const formattedDate = `${day}-${month}-${year}`;
         document.getElementById('datepicker-actions').setAttribute('datepicker-min-date', formattedDate);
     </script>
+
+    <!-- Script to toggle additional dropdown -->
+    <script>
+        const allGyms = ["Gym X", "Gym Y", "Gym Z", "Gym Alpha", "Gym Beta", "Gym Omega"];
+        const gymInput = document.getElementById("other-gym-search");
+        const resultsList = document.getElementById("gym-results");
+        const manualEntry = document.getElementById("manual-gym-entry");
+
+        document.getElementById('gym').addEventListener('change', function () {
+            const container = document.getElementById('other-gym-container');
+            if (this.value === 'other') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        });
+
+        gymInput.addEventListener("input", function () {
+            const inputVal = this.value.toLowerCase();
+            resultsList.innerHTML = "";
+            manualEntry.classList.add("hidden");
+
+            if (!inputVal) {
+                resultsList.classList.add("hidden");
+                return;
+            }
+
+            const filteredGyms = allGyms.filter(gym => gym.toLowerCase().includes(inputVal));
+
+            if (filteredGyms.length === 0) {
+                resultsList.innerHTML = "<li class='px-4 py-2 text-gray-500'>No results found</li>";
+                manualEntry.classList.remove("hidden");
+            } else {
+                filteredGyms.forEach(gym => {
+                    const li = document.createElement("li");
+                    li.textContent = gym;
+                    li.className = "px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700";
+                    li.onclick = () => {
+                        gymInput.value = gym;
+                        resultsList.classList.add("hidden");
+                        manualEntry.classList.add("hidden");
+                    };
+                    resultsList.appendChild(li);
+                });
+            }
+
+            resultsList.classList.remove("hidden");
+        });
+
+        // Hide results + textarea if clicked outside
+        document.addEventListener("click", function (e) {
+            if (!document.getElementById("other-gym-container").contains(e.target)) {
+                resultsList.classList.add("hidden");
+                // Don't hide textarea here to preserve manual entry
+            }
+        });
+    </script>
+
 </body>
 
 </html>

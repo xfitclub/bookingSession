@@ -101,6 +101,377 @@
         document.getElementById('datepicker-actions').setAttribute('datepicker-min-date', formattedDate);
     </script>
 
+
+
+<div>
+
+    <!-- Gym Dropdown with Search & Other Option -->
+    <div x-data="{ gym: '', showOther: false }" class="mb-6">
+        <label for="gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Select Plezi partnered gym:
+        </label>
+
+        <!-- Searchable input with datalist (mimics select + search) -->
+        <input list="gyms" x-model="gym" @input="showOther = (gym === 'Other')" id="gym" name="gym"
+            placeholder="Select or search a gym"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            required>
+
+        <datalist id="gyms">
+            <option value="[PP]GYM A"></option>
+            <option value="[PP]GYM B"></option>
+            <option value="[PP]GYM C"></option>
+            <option value="[PP]GYM D"></option>
+            <option value="Other"></option>
+        </datalist>
+
+        <!-- Input shown only if "Other" is selected -->
+        <div x-show="showOther" x-transition class="mt-4">
+            <label for="other-gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Please specify other gym:
+            </label>
+            <input type="text" id="other-gym" name="other_gym"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                placeholder="Enter gym name">
+        </div>
+    </div>
+
+
+
+
+    <div>
+
+
+        
+            <!-- Gym Dropdown -->
+            <div class="mb-6">
+                <label for="gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Plezi
+                    partnered
+                    gym:</label>
+                <select id="gym"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                    required>
+                    <option disabled selected>Select a gym</option>
+                    <option>GYM A</option>
+                    <option>GYM B</option>
+                    <option>GYM C</option>
+                    <option>GYM D</option>
+                    <option>other</option>
+                </select>
+            </div>
+    </div>
+
+
+
+
+    <script>
+        const allGyms = ["Gym X", "Gym Y", "Gym Z", "Gym Alpha", "Gym Beta", "Gym Omega"];
+        const gymInput = document.getElementById("other-gym-search");
+        const resultsList = document.getElementById("gym-results");
+    
+        document.getElementById('gym').addEventListener('change', function () {
+            const container = document.getElementById('other-gym-container');
+            if (this.value === 'other') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        });
+    
+        gymInput.addEventListener("input", function () {
+            const inputVal = this.value.toLowerCase();
+            resultsList.innerHTML = "";
+            if (!inputVal) {
+                resultsList.classList.add("hidden");
+                return;
+            }
+    
+            const filteredGyms = allGyms.filter(gym => gym.toLowerCase().includes(inputVal));
+    
+            if (filteredGyms.length === 0) {
+                resultsList.innerHTML = "<li class='px-4 py-2 text-gray-500'>No results found</li>";
+            } else {
+                filteredGyms.forEach(gym => {
+                    const li = document.createElement("li");
+                    li.textContent = gym;
+                    li.className = "px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700";
+                    li.onclick = () => {
+                        gymInput.value = gym;
+                        resultsList.classList.add("hidden");
+                    };
+                    resultsList.appendChild(li);
+                });
+            }
+    
+            resultsList.classList.remove("hidden");
+        });
+    
+        // Optional: hide dropdown when clicking outside
+        document.addEventListener("click", function (e) {
+            if (!document.getElementById("other-gym-container").contains(e.target)) {
+                resultsList.classList.add("hidden");
+            }
+        });
+    </script>
+    
+</div>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BKUP -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Book your Plezi trial session by selecting your preferred date, time, and gym partner.">
+    <meta name="keywords" content="Plezi, gym trial, fitness booking, workout, schedule session">
+    <meta name="author" content="Plezi">
+    <link rel="icon" href="PleziLogo.png" type="image/x-icon">
+
+    <title>Plezi - Trial Booking Session</title>
+
+    <!-- Tailwind CSS + Flowbite setup -->
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@latest/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@latest/dist/flowbite.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Include Alpine.js (for interactivity) -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link rel="stylesheet" href="index.css" />
+
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="bg-white border-gray-200 dark:bg-gray-900">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+                <a href="/#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="PleziLogo.png" class="h-8" alt="Plezi Logo" />
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Plezi</span>
+                </a>
+                <span class="text-xl font-semibold">Shaping up soon</span>
+                <img class="loading-icon" src="https://cdn.pixabay.com/photo/2020/05/04/01/37/dumbbell-5127417_1280.png"
+                    alt="Loading...">
+            </div>
+        </nav>
+    </header>
+
+
+
+    <div class="p-6">
+        <form class="max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <!-- Heading -->
+            <h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-white">Select Date and Time</h1>
+            <p class="text-center mb-4 text-gray-700 dark:text-gray-300">Please select a date and time for your trial
+                booking session.</p>
+
+            <!-- Date Picker -->
+            <div class="relative mb-6">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                    </svg>
+                </div>
+                <input id="datepicker-actions" datepicker datepicker-format="dd-mm-yyyy" datepicker-autoselect-today
+                    type="text"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                    placeholder="Select date" required>
+            </div>
+
+            <!-- Time Picker -->
+            <div class="mb-6" onclick="document.getElementById('time').showPicker()">
+                <label for="time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
+                    time:</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd"
+                                d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <input type="time" id="time" required
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" />
+                </div>
+            </div>
+
+            <!-- Gym Dropdown -->
+            <div class="mb-6">
+                <label for="gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Select Plezi partnered gym:
+                </label>
+                <select id="gym"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                    required>
+                    <option disabled selected>Select a gym</option>
+                    <option>[PP] GYM A</option>
+                    <option>[PP] GYM B</option>
+                    <option>[PP] GYM C</option>
+                    <option>[PP] GYM D</option>
+                    <option value="other">other</option>
+                </select>
+            </div>
+
+            <!-- Additional Search Dropdown (hidden by default) -->
+            <!-- <div id="other-gym-container" class="mb-6 hidden">
+                <label for="other-gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Search for other gym:
+                </label>
+                <select id="other-gym" data-te-select-init data-te-select-filter="true"
+                    class="w-full bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option disabled selected>Select a gym</option>
+                    <option>Gym X</option>
+                    <option>Gym Y</option>
+                    <option>Gym Z</option>
+                    <option>Gym Alpha</option>
+                    <option>Gym Beta</option>
+                    <option>Gym Omega</option>
+                </select>
+            </div> -->
+            <!-- Additional Search (hidden by default) -->
+            <div id="other-gym-container" class="mb-6 hidden">
+                <label for="other-gym-search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Search for other gym:
+                </label>
+                <input type="text" id="other-gym-search" placeholder="Start typing to search..."
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+
+                <!-- Filtered results -->
+                <ul id="gym-results"
+                    class="mt-2 max-h-40 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow hidden">
+                    <!-- Results will populate here -->
+                </ul>
+            </div>
+            <!-- Manual entry textarea (initially hidden) -->
+            <div id="manual-gym-entry" class="mt-3 hidden">
+                <label for="manual-gym" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Can't find your gym? Enter it manually:
+                </label>
+                <textarea id="manual-gym" rows="2" placeholder="Enter gym name here... <GYM NAME , AREA , CITY , STATE>"
+                    required
+                    class="w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+            </div>
+
+
+
+
+            <!-- Phone Input -->
+            <div class="mb-6">
+                <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
+                    number</label>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" placeholder="9876543210" required
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" />
+            </div>
+
+            <span><b>P.S.</b> We wont be spamming , we will notify you about your gym</span>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Submit
+            </button>
+        </form>
+    </div>
+    <script>
+        // Set today's date as minimum selectable date
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const year = today.getFullYear();
+        const formattedDate = `${day}-${month}-${year}`;
+        document.getElementById('datepicker-actions').setAttribute('datepicker-min-date', formattedDate);
+    </script>
+
+    <!-- Script to toggle additional dropdown -->
+    <!-- <script>
+        document.getElementById('gym').addEventListener('change', function () {
+            const otherGymContainer = document.getElementById('other-gym-container');
+            if (this.value === 'other') {
+                otherGymContainer.classList.remove('hidden');
+            } else {
+                otherGymContainer.classList.add('hidden');
+            }
+        });
+    </script> -->
+
+    <script>
+        const allGyms = ["Gym X", "Gym Y", "Gym Z", "Gym Alpha", "Gym Beta", "Gym Omega"];
+        const gymInput = document.getElementById("other-gym-search");
+        const resultsList = document.getElementById("gym-results");
+        const manualEntry = document.getElementById("manual-gym-entry");
+    
+        document.getElementById('gym').addEventListener('change', function () {
+            const container = document.getElementById('other-gym-container');
+            if (this.value === 'other') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        });
+    
+        gymInput.addEventListener("input", function () {
+            const inputVal = this.value.toLowerCase();
+            resultsList.innerHTML = "";
+            manualEntry.classList.add("hidden");
+    
+            if (!inputVal) {
+                resultsList.classList.add("hidden");
+                return;
+            }
+    
+            const filteredGyms = allGyms.filter(gym => gym.toLowerCase().includes(inputVal));
+    
+            if (filteredGyms.length === 0) {
+                resultsList.innerHTML = "<li class='px-4 py-2 text-gray-500'>No results found</li>";
+                manualEntry.classList.remove("hidden");
+            } else {
+                filteredGyms.forEach(gym => {
+                    const li = document.createElement("li");
+                    li.textContent = gym;
+                    li.className = "px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700";
+                    li.onclick = () => {
+                        gymInput.value = gym;
+                        resultsList.classList.add("hidden");
+                        manualEntry.classList.add("hidden");
+                    };
+                    resultsList.appendChild(li);
+                });
+            }
+    
+            resultsList.classList.remove("hidden");
+        });
+    
+        // Hide results + textarea if clicked outside
+        document.addEventListener("click", function (e) {
+            if (!document.getElementById("other-gym-container").contains(e.target)) {
+                resultsList.classList.add("hidden");
+                // Don't hide textarea here to preserve manual entry
+            }
+        });
+    </script>
+    
 </body>
 
 </html>
