@@ -119,7 +119,6 @@
                     Can't find your gym? Enter it manually:
                 </label>
                 <textarea id="manual-gym" rows="2" placeholder="Enter gym name here... <GYM NAME , AREA , CITY , STATE>"
-                    required
                     class="w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
             </div>
 
@@ -158,6 +157,7 @@
         const gymInput = document.getElementById("other-gym-search");
         const resultsList = document.getElementById("gym-results");
         const manualEntry = document.getElementById("manual-gym-entry");
+        const manualGymField = document.getElementById('manual-gym');
 
         document.getElementById('gym').addEventListener('change', function () {
             const container = document.getElementById('other-gym-container');
@@ -175,6 +175,8 @@
 
             if (!inputVal) {
                 resultsList.classList.add("hidden");
+                manualEntry.classList.add("hidden");
+                manualGymField.removeAttribute("required");
                 return;
             }
 
@@ -183,7 +185,13 @@
             if (filteredGyms.length === 0) {
                 resultsList.innerHTML = "<li class='px-4 py-2 text-gray-500'>No results found</li>";
                 manualEntry.classList.remove("hidden");
+                resultsList.classList.remove("hidden");
+                manualGymField.required = true;
             } else {
+                resultsList.classList.remove("hidden");
+                manualEntry.classList.add("hidden");
+                manualGymField.required = false;
+
                 filteredGyms.forEach(gym => {
                     const li = document.createElement("li");
                     li.textContent = gym;
@@ -192,6 +200,7 @@
                         gymInput.value = gym;
                         resultsList.classList.add("hidden");
                         manualEntry.classList.add("hidden");
+                        manualGymField.required = false;
                     };
                     resultsList.appendChild(li);
                 });
@@ -208,6 +217,102 @@
             }
         });
     </script>
+
+
+    <script>
+        (function () {
+            
+            const form = document.querySelector('form');
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwa7udWyL_BJIjDevIWZYbYYflS7r5pwW9Z5L35_hLQcWgbPGi6ravzgSRZ5Pa6CLwB/exec';
+            const pabblyWebhookURL = 'https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjYwNTY5MDYzZjA0M2M1MjZmNTUzNTUxM2Ii_pc';
+
+            const fmtDate = d => {
+                const z = n => String(n).padStart(2, '0');
+                return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
+            };
+
+            form.addEventListener('submit', async e => {
+                e.preventDefault();
+
+                const manualGymField = document.getElementById('manual-gym');
+                const gymSelect = document.getElementById('gym');
+                const otherGymSearch = document.getElementById('other-gym-search');
+                let gym ;
+                const typedGym = otherGymSearch.value.trim();
+                const manualGym = manualGymField.value.trim();
+                const allGyms = ["Gym X", "Gym Y", "Gym Z", "Gym Alpha", "Gym Beta", "Gym Omega"];
+                const filteredGyms = allGyms.filter(gym => gym.toLowerCase().includes(typedGym));
+
+                //  Handle conditional 'required'
+                if (gym === 'other' && !typedGym) {
+                    manualGymField.required = true;
+                } else {
+                    manualGymField.required = false;
+                }
+
+                // Final gym name
+                if (gymSelect.value === 'other') {
+                    if (typedGym && filteredGyms.length !== 0) {
+                        gym = typedGym;
+                    } else if (manualGym) {
+                        gym = manualGym;
+                    } else {
+                        alert("Please enter your gym manually.");
+                        manualGymField.required = true;
+                        manualGymField.focus();
+                        return;
+                    }
+                } else {
+                    gym = gymSelect.value;
+                }
+
+                const phone = form.phone.value.trim();
+                const date = form.querySelector('#datepicker-actions').value;
+                const time = form.time.value;
+
+                submitBtn.textContent = 'Submitting…';
+                submitBtn.disabled = true;
+
+                try {
+                    const fd = new FormData(form);
+                    fd.set('date', fmtDate(new Date()));
+                    fd.set('selected_date', date);
+                    fd.set('selected_time', time);
+                    fd.set('gym_selected', gym);
+
+                    const ipj = await fetch('https://api.ipify.org?format=json').then(r => r.json());
+                    fd.set('ip_address', ipj.ip);
+
+                    console.log('Form Data:', Object.fromEntries(fd.entries()));
+
+                    await fetch(scriptURL, { method: 'POST', body: fd });
+
+                    await fetch(pabblyWebhookURL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ whatsapp: phone, gym, date, time })
+                    });
+
+                    alert('Booking submitted successfully!');
+                    form.reset();
+                    document.getElementById('other-gym-container').classList.add('hidden');
+                    document.getElementById('manual-gym-entry').classList.add('hidden');
+
+                } catch (err) {
+                    console.error(err);
+                    alert('Submission failed.');
+                } finally {
+                    submitBtn.textContent = 'Submit';
+                    submitBtn.disabled = false;
+                }
+            });
+        })();
+    </script>
+
+
 
 </body>
 
